@@ -100,7 +100,9 @@ public class PostController {
                 .map(Tag::getName)
                 .collect(Collectors.joining(", "));
         System.out.print(currentTags);
-        model.addAttribute("tagsInput", currentTags);
+        if(currentTags != ""){
+            model.addAttribute("tagsInput", currentTags);
+        }
         return "posts/post-form";
     }
 
