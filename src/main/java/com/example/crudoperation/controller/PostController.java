@@ -57,7 +57,6 @@ public class PostController {
     public String savePost(@ModelAttribute("post") Post post, @RequestParam("tagsInput") String tagsInput, Model model) {
         List<Tag> tags = new ArrayList<>();
         TagService tagService1 = tagService;
-        System.out.println(tagsInput);
         for (String string : tagsInput.split(",")) {
             String trim = string.trim();
             Tag orCreateTag = (Tag) tagService1.findOrCreateTag(trim);
@@ -67,7 +66,10 @@ public class PostController {
 
         postService.save(post);
 
-        model.addAttribute("tags", tags);
+        if(tags.size()!=0){
+            
+            model.addAttribute("tags", tags);
+        }
 
         return "redirect:/posts/showPost?postId=" + post.getId();
     }
