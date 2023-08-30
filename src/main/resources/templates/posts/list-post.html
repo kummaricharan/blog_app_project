@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post List</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+
+<body>
+<div class="container">
+    <h1>Post List</h1>
+    <div th:if="${#authorization.expression('isAuthenticated()')}">
+        <a th:href="@{/posts/showFormForAdd}" class="btn btn-primary btn-sm mb-3">Add Post</a><br>
+        <a th:href="@{/posts/yourPosts}" class="btn btn-primary btn-sm mb-3">Your Posts</a><br>
+
+        <div th:if="${#authentication.name == 'admin'}">
+            <a th:href="@{/posts/draftPostOfAllAuthors}" class="btn btn-primary btn-sm mb-3">see all authors draftpost</a>
+        </div>
+
+        <div>
+            <form th:action="@{/logout}" method="post">
+                <input type="submit" value="logout">
+            </form>
+        </div>
+    </div>
+    <div th:unless="${#authorization.expression('isAuthenticated()')}">
+        <a th:href="@{/users/LoginPage}" class="btn btn-primary btn-sm mb-3">Login</a><br>
+        <a th:href="@{/users/showFormForAdd}" class="btn btn-primary btn-sm mb-3">Register</a>
+    </div>
+    <div class="main-container">
+        <div class="filter-container">
+            <form action="#" th:action="@{/posts/list}" method="get">
+                <div>
+                    <h1>Author</h1>
+                    <div th:each="eachAuthor : ${authors}" class="author">
+                        <div>
+                            <input type="checkbox" th:value="${eachAuthor}" name="author" th:checked="${selectedAuthors.contains(eachAuthor)}">
+                            <label th:text="${eachAuthor}"></label>
+                        </div>
+                    </div>
+                    <h1>Tags</h1>
+                    <div th:each="tag : ${tags}" class="tag">
+                        <div>
+                            <input type="checkbox" th:value="${tag}" name="tag" th:checked="${selectedTags.contains(tag)}">
+                            <label th:text="${tag}"></label>
+                        </div>
+                    </div>
+                    <div>
+                        <h2>Published Date :</h2>
+                        <input type="datetime-local" th:value="${startDate}" name="startDate">
+                        <input type="datetime-local" th:value="${endDate}" name="endDate">
+                    </div>
+                </div>
+                <input type="hidden" name="search" th:value="${searchParam}">
+                <input type="submit" value="Apply Filters">
+            </form>
+        </div>
+        <div class="post-container">
+            <form th:action="@{/posts/list}" method="get">
+                <input type="search" name="search" placeholder="Search posts..." th:value="${searchParam}">
+                <button type="submit">Search</button>
+            </form>
+
+            <form th:action="@{/posts/list}" method="get">
+                <select name="sort">
+                    <option value="title">Title</option>
+                    <option value="author">Author</option>
+                    <option value="publishedAt">Published At</option>
+                </select>
+                <button type="submit">Sort</button>
+            </form>
+            <div th:each="post : ${postsPage.content}" class="post-box">
+                <h2 class="post-title"><a th:href="@{/posts/showPost(postId=${post.id})}" th:text="${post.title}"></a></h2>
+                <p class="post-excerpt" th:text="${post.excerpt}"></p>
+                <p class="post-author">Author: <span th:text="${post.author}"></span></p>
+                <p class="post-publishedAt">Published At: <span th:text="${post.publishedAt}"></span></p>
+            </div>
+        </div>
+    </div>
+    <div class="pagination">
+                <span th:unless="${postsPage.first}">
+                    <a th:href="@{|${paginationUrl}&page=${postsPage.number - 1}|}">Previous</a>
+                </span>
+                <span th:unless="${postsPage.last}">
+                    <span style="margin-left: auto;"></span>
+                    <a th:href="@{|${paginationUrl}&page=${postsPage.number + 1}|}">Next</a>
+                </span>
+    </div>
+</div>
+<div class="container mt-3">
+    <a th:href="@{/posts/list}" class="btn btn-secondary">Back to Home</a>
+</div>
+</body>
+
+</html>

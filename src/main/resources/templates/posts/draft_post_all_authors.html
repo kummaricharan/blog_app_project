@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DrofedPost List</title>
+    <style>
+        /* Your existing styles here */
+
+        .main-container {
+            display: flex;
+        }
+
+        .filter-container {
+            width: 300px;
+            margin-right: 20px;
+        }
+
+        .filter-container form {
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .author, .tag {
+            margin: 10px 0;
+        }
+
+        .post-container {
+            flex-grow: 1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .post-box {
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 5px;
+            width: calc(50% - 20px);
+            box-sizing: border-box;
+            margin: 10px 0;
+        }
+
+        .post-title {
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .post-excerpt {
+            margin: 10px 0;
+            color: #555;
+        }
+
+        .post-author {
+            font-style: italic;
+            color: #888;
+        }
+
+        .post-publishedAt {
+            color: #888;
+        }
+    </style>
+</head>
+
+<body>
+<div th:each="post : ${posts}"  class="post-box">
+    <h2 class="post-title"><a th:href="@{/posts/showDraftPost(postId=${post.id})}" th:text="${post.title}"></a></h2>
+    <p class="post-excerpt" th:text="${post.excerpt}"></p>
+    <p class="post-author">Author: <span th:text="${post.author}"></span></p>
+</div>
+</body>
+
+</html>

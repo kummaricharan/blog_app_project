@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .registration-container {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        .already_exist {
+            color: red;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="password"],
+        .form-group input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+            display: block;
+            margin-top: 15px;
+        }
+    </style>
+    <script type="text/javascript">
+        function myfun() {
+            var a = document.getElementById("password").value;
+            var b = document.getElementById("cmp_password").value;
+            if (a !== b) {
+                document.getElementById("message").textContent = "Password is mismatched";
+                return false;
+            }
+        }
+    </script>
+</head>
+<body>
+<div class="registration-container">
+    <h2>User Registration</h2>
+    <form th:action="@{/users/register}" th:object="${user}" method="post" onsubmit="return myfun()">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" th:field="*{username}" />
+            <span th:text="${error}" class="already_exist"></span>
+        </div>
+        <div class="form-group">
+            <label for="role">Role</label>
+            <input type="text" name="role" id="role" th:field="*{role}" />
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" th:field="*{email}" />
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" th:field="*{password}" />
+            <span id="message"></span>
+        </div>
+        <div class="form-group">
+            <label for="cmp_password">Confirm Password</label>
+            <input type="password" name="cmp_password" id="cmp_password" th:field="*{cmp_password}" />
+        </div>
+        <button type="submit">Register</button>
+    </form>
+    <p> Already have an account?<a th:href="@{/users/LoginPage}"> Click here to Login</a></p>
+</div>
+</body>
+</html>
