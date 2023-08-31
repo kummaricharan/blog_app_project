@@ -57,19 +57,18 @@ public class PostController {
     public String savePost(@ModelAttribute("post") Post post, @RequestParam("tagsInput") String tagsInput, Model model) {
         List<Tag> tags = new ArrayList<>();
         TagService tagService1 = tagService;
-        for (String string : tagsInput.split(",")) {
-            String trim = string.trim();
-            Tag orCreateTag = (Tag) tagService1.findOrCreateTag(trim);
-            tags.add(orCreateTag);
+        if(tagsInput.length()!=0){
+            for (String string : tagsInput.split(",")) {
+                String trim = string.trim();
+                Tag orCreateTag = (Tag) tagService1.findOrCreateTag(trim);
+                tags.add(orCreateTag);
+            }
+            model.addAttribute("tags", tags);
         }
         post.setTags(tags);
 
         postService.save(post);
 
-        if(tags.size()!=0){
-            
-            model.addAttribute("tags", tags);
-        }
 
         return "redirect:/posts/showPost?postId=" + post.getId();
     }
@@ -102,9 +101,7 @@ public class PostController {
                 .map(Tag::getName)
                 .collect(Collectors.joining(", "));
         System.out.print(currentTags);
-        if(currentTags != ""){
-            model.addAttribute("tagsInput", currentTags);
-        }
+        model.addAttribute("tagsInput", currentTags);
         return "posts/post-form";
     }
 
@@ -267,5 +264,3 @@ public class PostController {
 
 
 }
-
-
