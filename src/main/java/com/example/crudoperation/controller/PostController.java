@@ -175,19 +175,19 @@ public class PostController {
 
         if (!authors.isEmpty() || !tags.isEmpty() || startDate != null || endDate != null) {
             postsPage = postService.resultWithFilterSearch(searchParam,authors, tags, startDate, endDate, pageable);
-//            if (searchParam != null) {
-//                List<Post> posts = postsPage.getContent();
-//                for (Post post : posts) {
-//                    filterAuthors.add(post.getAuthor());
-//                }
-//                for (Post post : posts) {
-//                    for (Tag filtertag : post.getTags()) {
-//                        filterTags.add(filtertag.getName());
-//                    }
-//                }
-//            }
-            model.addAttribute("authors", author);
-            model.addAttribute("tags", tag);
+            if (searchParam != null) {
+                List<Post> posts = postsPage.getContent();
+                for (Post post : posts) {
+                    filterAuthors.add(post.getAuthor());
+                }
+                for (Post post : posts) {
+                    for (Tag filtertag : post.getTags()) {
+                        filterTags.add(filtertag.getName());
+                    }
+                }
+            }
+            model.addAttribute("authors", filterAuthors);
+            model.addAttribute("tags", filterTags);
         }
         else if (searchParam != null && ! searchParam.equals("")) {
             System.out.println(searchParam);
