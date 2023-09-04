@@ -2,7 +2,6 @@ package com.example.crudoperation.controller;
 
 import com.example.crudoperation.entity.Post;
 import com.example.crudoperation.entity.Tag;
-import com.example.crudoperation.entity.User;
 import com.example.crudoperation.services.PostService;
 import com.example.crudoperation.services.TagService;
 import com.example.crudoperation.services.UserService;
@@ -24,8 +23,6 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import org.springframework.security.core.*;
 
 @Controller
 @RequestMapping("/posts")
@@ -56,11 +53,10 @@ public class PostController {
     @PostMapping("/save")
     public String savePost(@ModelAttribute("post") Post post, @RequestParam("tagsInput") String tagsInput, Model model) {
         List<Tag> tags = new ArrayList<>();
-        TagService tagService1 = tagService;
         if(tagsInput.length()!=0){
             for (String string : tagsInput.split(",")) {
                 String trim = string.trim();
-                Tag orCreateTag = (Tag) tagService1.findOrCreateTag(trim);
+                Tag orCreateTag = (Tag) tagService.findOrCreateTag(trim);
                 tags.add(orCreateTag);
             }
             model.addAttribute("tags", tags);
@@ -68,7 +64,6 @@ public class PostController {
         post.setTags(tags);
 
         postService.save(post);
-
 
         return "redirect:/posts/showPost?postId=" + post.getId();
     }
@@ -180,19 +175,19 @@ public class PostController {
 
         if (!authors.isEmpty() || !tags.isEmpty() || startDate != null || endDate != null) {
             postsPage = postService.resultWithFilterSearch(searchParam,authors, tags, startDate, endDate, pageable);
-            if (searchParam != null) {
-                List<Post> posts = postsPage.getContent();
-                for (Post post : posts) {
-                    filterAuthors.add(post.getAuthor());
-                }
-                for (Post post : posts) {
-                    for (Tag filtertag : post.getTags()) {
-                        filterTags.add(filtertag.getName());
-                    }
-                }
-                model.addAttribute("authors", filterAuthors);
-                model.addAttribute("tags", filterTags);
-           }
+//            if (searchParam != null) {
+//                List<Post> posts = postsPage.getContent();
+//                for (Post post : posts) {
+//                    filterAuthors.add(post.getAuthor());
+//                }
+//                for (Post post : posts) {
+//                    for (Tag filtertag : post.getTags()) {
+//                        filterTags.add(filtertag.getName());
+//                    }
+//                }
+//            }
+            model.addAttribute("authors", author);
+            model.addAttribute("tags", tag);
         }
         else if (searchParam != null && ! searchParam.equals("")) {
             System.out.println(searchParam);
@@ -261,6 +256,4 @@ public class PostController {
 
         return "posts/list-post";
     }
-
-
 }
